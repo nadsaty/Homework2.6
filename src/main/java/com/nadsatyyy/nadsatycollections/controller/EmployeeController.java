@@ -1,4 +1,4 @@
-package com.nadsatyyy.nadsatycollections;
+package com.nadsatyyy.nadsatycollections.controller;
 
 import com.nadsatyyy.nadsatycollections.model.Employee;
 import com.nadsatyyy.nadsatycollections.service.EmployeeService;
@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("employees")
@@ -29,5 +31,10 @@ public class EmployeeController {
     @GetMapping("find")
     public Employee find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
         return employeeService.find(firstName, lastName);
+    }
+
+    @GetMapping
+    public List<Employee> getAll() {
+        return employeeService.getAll();
     }
 }

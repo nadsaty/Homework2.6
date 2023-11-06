@@ -5,9 +5,11 @@ import com.nadsatyyy.nadsatycollections.exception.EmployeeNotFoundExcerption;
 import com.nadsatyyy.nadsatycollections.exception.EmployeeStorageIsFullException;
 import com.nadsatyyy.nadsatycollections.model.Employee;
 import com.nadsatyyy.nadsatycollections.service.EmployeeService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+@Service
 
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -48,5 +50,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
         throw new EmployeeNotFoundExcerption("Сотрудник " + firstName + " " + lastName + " не найден!");
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        return new ArrayList<>(employees);
     }
 }
