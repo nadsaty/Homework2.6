@@ -1,7 +1,6 @@
 package com.nadsatyyy.nadsatycollections.service;
 import com.nadsatyyy.nadsatycollections.model.Employee;
-
-import java.util.List;
+import java.util.Map;
 
 public interface EmployeeService {
     Employee add(String firstName, String lastName);
@@ -10,6 +9,6 @@ public interface EmployeeService {
 
     Employee find(String firstName, String lastName);
 
-    List<Employee> getAll();
+    Map<String, Employee> getAll();
 
 }
