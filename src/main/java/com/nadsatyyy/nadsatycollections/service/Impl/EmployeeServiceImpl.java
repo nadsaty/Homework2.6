@@ -5,13 +5,14 @@ import com.nadsatyyy.nadsatycollections.exception.EmployeeNotFoundExcerption;
 import com.nadsatyyy.nadsatycollections.exception.EmployeeStorageIsFullException;
 import com.nadsatyyy.nadsatycollections.model.Employee;
 import com.nadsatyyy.nadsatycollections.service.EmployeeService;
+import org.springframework.stereotype.Service;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
+@Service
 
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final List<Employee> employees = new ArrayList<>();
+    private final Map<String, Employee> employees = new HashMap<>();
     private final int STORAGE_SIZE = 5;
 
     @Override
@@ -20,33 +21,42 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeStorageIsFullException("Хранилище сотрудников заполнено!");
         }
 
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        if (employees.containsKey(getKey(firstName, lastName))) {
             throw new EmployeeAlreadyAddedException("Сотрудник " + firstName + " " + lastName + " уже добавлен в хранилище!");
         }
 
-        employees.add(employee);
+        Employee employee = new Employee(firstName, lastName);
+        employees.put(getKey(employee), employee);
         return employee;
     }
 
     @Override
     public Employee remove(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+        if (!employees.containsKey(getKey(firstName, lastName))) {
             throw new EmployeeNotFoundExcerption("Сотрудник " + firstName + " " + lastName + " не найден!");
         }
-        employees.remove(employee);
-        return employee;
+        return employees.remove(getKey(firstName, lastName));
     }
 
     @Override
     public Employee find(String firstName, String lastName) {
-        Employee requestedEmployee = new Employee(firstName, lastName);
-        for (Employee employee : employees) {
-            if (employee.equals(requestedEmployee)) {
-                return requestedEmployee;
-            }
+        Employee employee = employees.get(getKey(firstName, lastName));
+        if (employee == null) {
+            throw new EmployeeNotFoundExcerption("Сотрудник " + firstName + " " + lastName + " не найден!");
         }
-        throw new EmployeeNotFoundExcerption("Сотрудник " + firstName + " " + lastName + " не найден!");
+        return employee;
+    }
+
+    @Override
+    public Map<String, Employee> getAll() {
+        return Collections.unmodifiableMap(employees);
+    }
+
+    private static String getKey(String firstName, String lastName) {
+        return firstName + lastName;
+    }
+
+    private static String getKey(Employee employee) {
+        return employee.getFirstName() + employee.getLastName();
     }
 }
